@@ -8,11 +8,46 @@ import base64
 from PIL import Image
 import io
 import sqlite3
+from flask import Flask, render_template, Response
+from servsocket import Streaming_Video
+import time
+import pickle
+import base64
+from PIL import Image
+import numpy as np
+import cv2
 # from app import app
 import pandas as pd
 app = Flask(__name__)
 # global flags 
 flags=False
+
+
+def gen():
+        stream = Streaming_Video('192.168.18.208', 8080)
+        stream.start()
+        while True:
+            if stream.streaming:
+            # frame=pickle.loads(stream.get_jpeg(), fix_imports=True, encoding="bytes")
+            # print(frame)
+            # frame = frame.decode()
+            # print('frame',frame[0:100])
+            # img_conv = base64.b64decode(frame)
+            # as_np = np.frombuffer(img_conv, dtype=np.uint8)
+            # org_im = cv2.imdecode(as_np,flags=1)
+            # yield(org_im)
+            # print("frame",stream.get_jpeg())
+            # print("sleep")
+                f = open('2.jpg', 'wb')
+                f.write(stream.get_jpeg())
+                f.close()
+                # print(type(stream.get_jpeg()))
+                # image=Image.open(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + stream.get_jpeg() + b'\r\n\r\n')
+                # image.save(r"img")
+                # time.sleep(4)
+                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + stream.get_jpeg() + b'\r\n\r\n')
+
+
 
 def fetchDataframe():
     con = sqlite3.connect("database.db")
@@ -52,7 +87,7 @@ def bar_data(df):
 def donut_data(df):
     df = df.lable.value_counts()
     s = sum(df.values)
-    if s is 0:
+    if s == 0:
         s = 1
     return [
         {
@@ -120,6 +155,13 @@ def index():
     # flags=False
     return render_template("index.html", jsondata=get_json())
 
+@app.route('/video_feed')
+def video_feed():
+  print("hello")
+  print("frame ",gen())
+  # print(Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame'))
+  return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 @app.route("/history",methods=["GET","POST"])
 def history():
     print("history loading")
@@ -130,6 +172,17 @@ def history():
     else:
         print("get histoyr")
         return render_template("history.html")
+        
+@app.route("/prediction",methods=["GET","POST"])
+def prediction():
+    print("prediction loading")
+    if request.method=="POST":
+        print("post prediction")
+        print("start datetime",request.form['start'])
+        return render_template("prediction.html",jsondata=get_json())
+    else:
+        print("get prediction")
+        return render_template("prediction.html")
 
 def send_result(response=None, error='', status=200):
     if response is None:
@@ -141,11 +194,11 @@ def send_result(response=None, error='', status=200):
 def get_json():
     global flags
     if flags == False:
-        print ("flag false statement")
+        # print ("flag false statement")
         df = fetchDataframe()
         bar = bar_data(df)
         donut = donut_data(df)
-        print(line_plot(df))
+        # print(line_plot(df))
         year, month, day, hour, minute, second, index, ln = line_plot(df)
         flags=True
         return jsonify({
@@ -162,11 +215,11 @@ def get_json():
             "checkflag":False
         })
     else:
-        print ("flag true statement")
+        # print ("flag true statement")
         df = fetchDataframe()
         bar = bar_data(df)
         donut = donut_data(df)
-        print(line_plot(df))
+        # print(line_plot(df))
         year, month, day, hour, minute, second, index, ln = line_plot(df)
         return jsonify({
             "bar_data": str(bar),
@@ -244,4 +297,4 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="192.168.18.208",threaded=True)
