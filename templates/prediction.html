@@ -2,6 +2,24 @@
 <html lang="en">
 
 <head>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: none;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SVC and AS</title>
@@ -26,8 +44,8 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link" >
-          <span class="badge badge-warning " style="background-color:rgb(144,210,250); font-size: medium;">Home</span>
+          <a href="#" class="nav-link">
+            <span class="badge badge-warning " style="background-color:rgb(144,210,250); font-size: medium;">Home</span>
           </a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
@@ -120,9 +138,10 @@
         </li> -->
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
-          <a  href="{{ url_for('history') }}">
-            <!-- <i class="far fa-bell"></i> --> 
-            <span class="badge badge-warning navbar-badge" style="background-color:rgb(144,210,250); font-size: medium;">History</span>
+          <a href="{{ url_for('history') }}">
+            <!-- <i class="far fa-bell"></i> -->
+            <span class="badge badge-warning navbar-badge"
+              style="background-color:rgb(144,210,250); font-size: medium;">History</span>
           </a>
         </li>
         <!-- <li class="nav-item dropdown">
@@ -275,13 +294,13 @@
       <section class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <!-- interactive chart -->
               <div class="card card-primary card-outline">
                 <div class="card-header">
                   <h3 class="card-title">
                     <i class="far fa-chart-bar"></i>
-                    Interactive Area Chart
+                    predicted Image
                   </h3>
 
 
@@ -294,19 +313,19 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+                  <img style="width: 100%;height: 390px;" id="myImage" ,src='/static/img/output.jpg'>
                 </div>
                 <!-- /.card-body-->
               </div>
               <!-- /.card -->
 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="card card-primary card-outline">
                 <div class="card-header">
                   <h3 class="card-title">
                     <i class="far fa-chart-bar"></i>
-                    Bar Chart
+                    Detected Vehicles
                   </h3>
 
                   <div class="card-tools">
@@ -319,52 +338,50 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <div id="bar-chart" style="height: 300px;"></div>
-                </div>
-                <!-- /.card-body-->
-              </div>
-            </div>
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
+                  <div style="height: 300px;">
+                    <!-- table create -->
+                    <table>
+                      <tr>
+                        <th>Vehicle Type</th>
+                        <th>Count</th>
+                      </tr>
+                      <tr>
+                        <td>car</td>
+                        <td>6</td>
+                      </tr>
+                      <tr>
+                        <td>bus</td>
+                        <td>2</td>
+                      </tr>
+                      <tr>
+                        <td>truck</td>
+                        <td>0</td>
+                      </tr>
+                      <tr>
+                        <td>bike</td>
+                        <td>15</td>
+                      </tr>
+                      <tr>
+                        <td>Rikshaw</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>25</td>
+                      </tr>
+                    </table>
 
-          <div class="row">
-
-            <!-- /.col -->
-
-            <div class="col-md-6">
 
 
-              <!-- Donut chart -->
-              <div class="card card-primary card-outline">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    <i class="far fa-chart-bar"></i>
-                    Donut Chart
-                  </h3>
-
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
                   </div>
                 </div>
-                <div class="card-body">
-                  <div id="donut-chart" style="height: 300px;"></div>
-                </div>
                 <!-- /.card-body-->
               </div>
-              <!-- /.card -->
-            </div>
-            <div class="col-md-6">
-              <img style="width: 100%;height: 390px;" id="myImage" ,src='/static/img/output.jpg'>
             </div>
             <!-- /.col -->
           </div>
-          <!-- /.row -->
+
+
         </div><!-- /.container-fluid -->
       </section>
       <!-- /.content -->
@@ -397,159 +414,88 @@
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   <script>
 
-    // setInterval(function () {
-    //   var myimageelement = document.getElementById('myImage');
-    //   myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
-    // }, 5000)
+    setInterval(function () {
+      var myimageelement = document.getElementById('myImage');
+      myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
+    }, 4000)
 
-    function parsedate(y, m, d, h, mi, s) {
-      // var d = new Date()
-      
-      var d = new Date(y, m, d, h, mi, s)
-      return d
+    // function parsedate(y, m, d, h, mi, s) {
+    //   // var d = new Date()
 
-    }
+    //   var d = new Date(y, m, d, h, mi, s)
+    //   return d
 
-    window.onload = function () {
-      var line_plot = []
-      var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        title: {
-          text: "Traffic"
-        },
-        // axisX:{
-        //   // includeZero: true,
-        // 	// valueFormatString: "DD MMM"
-        // },
-        axisY: {
-          includeZero: true,
-          title: "Number of Vehicles"
-          // scaleBreaks: {
-          //   autoCalculate: true
-          // }
-        },
-        data: [{
-          type: "spline",
-          xValueFormatString: "dd hh mm ss",
-          // color: "#3c8dbc",
-          dataPoints: line_plot
-        }
-        ]
-      });
-      chart.render();
+    // }
+
+    // window.onload = function () {
+    //   var line_plot = []
+    //   var chart = new CanvasJS.Chart("chartContainer", {
+    //     animationEnabled: true,
+    //     title: {
+    //       text: "Traffic"
+    //     },
+    //     // axisX:{
+    //     //   // includeZero: true,
+    //     // 	// valueFormatString: "DD MMM"
+    //     // },
+    //     axisY: {
+    //       includeZero: true,
+    //       title: "Number of Vehicles"
+    //       // scaleBreaks: {
+    //       //   autoCalculate: true
+    //       // }
+    //     },
+    //     data: [{
+    //       type: "spline",
+    //       xValueFormatString: "dd hh mm ss",
+    //       // color: "#3c8dbc",
+    //       dataPoints: line_plot
+    //     }
+    //     ]
+    //   });
+    //   chart.render();
       // chart.remove();
       // chart.destroy();
 
 
-      var updatechart = function (year, m, d, h, mi, s, y,checkflag) {
-        if(line_plot.length==0){
-          checkflag=false
-        }
-        if (checkflag==false){
-          console.log("false condition")
-          console.log(line_plot)
+      // var updatechart = function (year, m, d, h, mi, s, y, checkflag) {
+      //   if (line_plot.length == 0) {
+      //     checkflag = false
+      //   }
+      //   if (checkflag == false) {
+      //     console.log("false condition")
+      //     console.log(line_plot)
 
-        for (let i =0 ;i<year.length;i++){
-        line_plot.push({
-          x: parsedate(year[i], m[i], d[i], h[i], mi[i], s[i]), y: y[i]
+      //     for (let i = 0; i < year.length; i++) {
+      //       line_plot.push({
+      //         x: parsedate(year[i], m[i], d[i], h[i], mi[i], s[i]), y: y[i]
 
-        })}}
-        else{
-          ln=year.length-1
-          console.log("true condition")
-          console.log(line_plot)
-          line_plot.push({
-          x: parsedate(year[ln], m[ln], d[ln], h[ln], mi[ln], s[ln]), y: y[ln]
+      //       })
+      //     }
+      //   }
+      //   else {
+      //     ln = year.length - 1
+      //     console.log("true condition")
+      //     console.log(line_plot)
+      //     line_plot.push({
+      //       x: parsedate(year[ln], m[ln], d[ln], h[ln], mi[ln], s[ln]), y: y[ln]
 
-        })
-        
-        }
-        if (line_plot.length > 15) {
-          line_plot.shift();
-        }
-        // chart.clear();
-        chart.render();
-        
-      }
+      //     })
 
-      setInterval(function () {
-        var myimageelement = document.getElementById('myImage');
-        myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
+      //   }
+      //   if (line_plot.length > 15) {
+      //     line_plot.shift();
+      //   }
+      //   // chart.clear();
+      //   chart.render();
 
+      // }
 
+    //   setInterval(function () {
+    //     var myimageelement = document.getElementById('myImage');
+    //     myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
+    // }
 
-        $.ajax(
-          {
-            type: "POST",
-            url: "/fetchdata",
-            success: function (respnse) {
-
-              $.plot('#bar-chart', [JSON.parse(respnse.bar_data)], {
-                grid: {
-                  borderWidth: 1,
-                  borderColor: '#f3f3f3',
-                  tickColor: '#f3f3f3'
-                },
-                series: {
-                  bars: {
-                    show: true, barWidth: 0.5, align: 'center',
-                  },
-                },
-                colors: ['#3c8dbc'],
-                xaxis: {
-                  ticks: [[1, 'Car'], [2, 'Bus'], [3, 'Bike'], [4, 'Van'], [5, 'Truck'], [6, 'Bicycle'], [7, "Rikshaw"]]
-                }
-              });
-              $.plot('#donut-chart', respnse.donut_data, {
-                series: {
-                  pie: {
-                    show: true,
-                    radius: 1,
-                    innerRadius: 0.5,
-                    label: {
-                      show: true,
-                      radius: 2.3 / 3,
-                      formatter: labelFormatter,
-                      threshold: 0.0
-                    }
-
-                  }
-                },
-                legend: {
-                  show: false
-                }
-              });
-              // $("count_check").html(respnse.count)
-              /*
-               * END DONUT CHART
-               */
-              // })
-
-
-              var y = respnse.year;
-
-              var m = respnse.month;
-              var d = respnse.day;
-              var h = respnse.hour;
-              var mi = respnse.minute;
-              var s = respnse.second;
-              var index = respnse.line_index_data;
-              // console.log(y)
-              checkflag=respnse.checkflag
-              updatechart(y, m, d, h, mi, s, index,checkflag);
-
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          }
-        )
-      }
-        , 5000
-      );
-
-    }
-    
 
     /*
      * Custom Label formatter
@@ -566,7 +512,7 @@
 
 
 
-    
+
   </script>
 </body>
 

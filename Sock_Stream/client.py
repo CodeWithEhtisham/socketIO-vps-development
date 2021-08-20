@@ -9,7 +9,7 @@ import base64
 cap = cv2.VideoCapture(0)
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(('192.168.18.208', 8080))
+client_socket.connect(('127.0.0.1', 8080))
 
 while cap.isOpened():
     _, frame = cap.read()
