@@ -418,7 +418,19 @@
       var myimageelement = document.getElementById('myImage');
       myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
     }, 4000)
+    setInterval(function () {
+      fetch('/url', {
+        method: "get",
+        body: {
 
+        }
+      }).then(response => {
+        return response.json()
+      }).then(data => {
+        
+      })
+      .catch(err => console.log(err));
+    },2000);
     // function parsedate(y, m, d, h, mi, s) {
     //   // var d = new Date()
 

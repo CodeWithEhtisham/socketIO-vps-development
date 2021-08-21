@@ -49,22 +49,49 @@ def gen():
 
 
 
-def fetchDataframe():
+def fetchDataframe(limit=100):
     con = sqlite3.connect("database.db")
     mycursor = con.cursor()
-    mycursor.execute(
-        "SELECT * from data LEFT JOIN results ON data.frame_id=results.frame_id ORDER by data.frame_id desc limit 100")
-    result = mycursor.fetchall()
-    con.close()
+    
     # code to split it into 2 lists
     # res1, res2 = map(list, zip(*ini_list))
-    df = pd.DataFrame({
-        "date": [i[2] for i in result],
-        "frame_id": [i[4] for i in result],
-        "vehicle": [i[5] for i in result],
-        "id": [i[5] for i in result],
-        "lable": [i[7] for i in result]})
-    return df
+    if limit != 1:
+        mycursor.execute(
+        "SELECT * from data LEFT JOIN results ON data.frame_id=results.frame_id ORDER by data.frame_id desc limit {}".format(limit))
+        result = mycursor.fetchall()
+        con.close()
+        df = pd.DataFrame({
+            "date": [i[2] for i in result],
+            "frame_id": [i[4] for i in result],
+            "vehicle": [i[5] for i in result],
+            "id": [i[5] for i in result],
+            "lable": [i[7] for i in result]})
+        return df
+    else:
+        mycursor.execute(
+            "SELECT * FROM data ORDER BY data.frame_id desc LIMIT {}".format(limit)
+        )
+        result=mycursor.fetchall()[0][-1]
+        print(result)
+        mycursor.execute(
+            "SELECT * FROM results where results.frame_id={}".format(result)
+
+        )
+        result=mycursor.fetchall()
+        con.close()
+        dic={
+            "Car":0,
+            "Bus":0,
+            "Truck":0,
+            "rikshaw":0,
+            "Bike":0
+        }
+        for i in result:
+            dic[i[2]]+=1
+
+        return json.dumps(dic)
+        # return result
+    # return df
 
 def data_check(df, name):
     try:
@@ -189,7 +216,11 @@ def send_result(response=None, error='', status=200):
         response = {}
     result = json.dumps({'result': response, 'error': error})
     return Response(status=status, mimetype="application/json", response=result)
-
+@app.route('/fetchtable',methods=["POST","GET"])
+def get_table_data():
+    df=fetchDataframe(1)
+    print(df)
+    return str(df)
 @app.route('/fetchdata', methods=["POST"])
 def get_json():
     global flags
