@@ -84,10 +84,21 @@ def fetchDataframe(limit=100):
             "Bus":0,
             "Truck":0,
             "rikshaw":0,
-            "Bike":0
+            "Bike":0,
+            "Van":0,
+            "total":0
+
         }
         for i in result:
-            dic[i[2]]+=1
+            if i[2] =='Motorcycle':
+                dic['Bike']+=1
+                dic['total']+=1
+            elif i[2]=='Auto_rikshaw':
+                dic['rikshaw']+=1
+                dic['total']+=1
+            else:
+                dic[i[2]]+=1
+                dic['total']+=1
 
         return json.dumps(dic)
         # return result
@@ -220,7 +231,7 @@ def send_result(response=None, error='', status=200):
 def get_table_data():
     df=fetchDataframe(1)
     print(df)
-    return str(df)
+    return df
 @app.route('/fetchdata', methods=["POST"])
 def get_json():
     global flags
@@ -328,4 +339,5 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1",threaded=True)
+    # app.run(host="127.0.0.1",threaded=True)
+    app.run(host="192.168.18.208",threaded=True) # home desktop

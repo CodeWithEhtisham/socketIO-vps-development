@@ -346,28 +346,33 @@
                         <th>Count</th>
                       </tr>
                       <tr>
-                        <td>car</td>
-                        <td>6</td>
+                        <td>Car</td>
+                        <td><span id="car"></span></td>
                       </tr>
                       <tr>
                         <td>bus</td>
-                        <td>2</td>
+                        <td><span id="bus"></span></td>
                       </tr>
                       <tr>
                         <td>truck</td>
-                        <td>0</td>
+                        <td><span id="truck"></span></td>
                       </tr>
                       <tr>
                         <td>bike</td>
-                        <td>15</td>
+                        <td><span id="bike"></span></td>
                       </tr>
                       <tr>
                         <td>Rikshaw</td>
-                        <td>8</td>
+                        <td><span id="rikshaw"></span></td>
                       </tr>
                       <tr>
+                        <tr>
+                          <td>Van</td>
+                          <td><span id="van"></span></td>
+                        </tr>
+                        <tr>
                         <td></td>
-                        <td>25</td>
+                        <td><span id="total"></span></td>
                       </tr>
                     </table>
 
@@ -417,20 +422,38 @@
     setInterval(function () {
       var myimageelement = document.getElementById('myImage');
       myimageelement.src = "/static/img/output.jpg?rand=" + Math.random();
-    }, 4000)
-    setInterval(function () {
-      fetch('/url', {
-        method: "get",
-        body: {
 
-        }
-      }).then(response => {
-        return response.json()
-      }).then(data => {
-        
-      })
-      .catch(err => console.log(err));
-    },2000);
+    }, 2500)
+    function ShowCurrentTime() {
+                // Ajax call to YOUR_PAGE.aspx/GetCurrentTime
+                $.ajax({
+                    type: "GET",
+                    url: "/fetchtable", // Change Default.aspx to your ASPX page name, and GetCurrentTime to your server-side WebMethod name
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccess // OnSuccess method is called when AJAX request receives the data from the server
+                });
+            }
+
+            function OnSuccess(response) {
+                // The response will contain JSON object like {"d":"29.6.2014 13:21:47"},
+                // so the actual data is response.d
+                $("#car").text(JSON.parse(response.Car));
+                $("#bus").text(JSON.parse(response.Bus)); // Fill our SPAN label with the data. 
+                $("#truck").text(JSON.parse(response.Truck));
+                $("#bike").text(JSON.parse(response.Bike));
+                $("#van").text(JSON.parse(response.Van));
+
+                // $("#van").text(JSON.parse(response.Car));
+                $("#rikshaw").text(JSON.parse(response.rikshaw));
+                $("#total").text(JSON.parse(response.total));
+            }
+
+            $(function () {
+                // Call every 1000 miliseconds
+                window.setInterval(ShowCurrentTime, 8000);
+            });
+
     // function parsedate(y, m, d, h, mi, s) {
     //   // var d = new Date()
 
