@@ -1,22 +1,13 @@
 #!/usr/bin/python3
 from flask import Flask, Response, render_template, request, jsonify
 import json
-import numpy as np
-# from cv2 import imread,imdecode,imwrite
 import datetime
-import base64
 from PIL import Image
 import io
 import sqlite3
-from flask import Flask, render_template, Response
 from servsocket import Streaming_Video
-import time
-import pickle
 import base64
-from PIL import Image
 import numpy as np
-import cv2
-# from app import app
 import pandas as pd
 app = Flask(__name__)
 # global flags 
@@ -24,7 +15,7 @@ flags=False
 
 
 def gen():
-        stream = Streaming_Video('127.0.0.1', 8080)
+        stream = Streaming_Video('0.0.0.0', 5005)
         stream.start()
         while True:
             if stream.streaming:
@@ -284,7 +275,7 @@ def db_data_insertion(data):
         cur = con.cursor()
         cur.execute(sql, data)
         con.commit()
-        print("insertiion seccessfull in data table")
+        print("insertion seccessfull in data table")
         a = cur.lastrowid
         con.close()
         return a
@@ -340,4 +331,4 @@ def login():
 
 if __name__ == "__main__":
     # app.run(host="127.0.0.1",threaded=True)
-    app.run(host="192.168.18.208",threaded=True) # home desktop
+    app.run(host="0.0.0.0",threaded=True) # home desktop
