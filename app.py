@@ -15,7 +15,7 @@ flags=False
 
 
 def gen():
-        stream = Streaming_Video('0.0.0.0', 5005)
+        stream = Streaming_Video('192.168.18.34', 5555)
         stream.start()
         while True:
             if stream.streaming:

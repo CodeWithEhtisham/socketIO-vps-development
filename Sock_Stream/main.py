@@ -9,7 +9,7 @@ import cv2
 app = Flask(__name__)
 
 def gen():
-  stream = Streaming_Video('127.0.0.1', 8080)
+  stream = Streaming_Video('0.0.0.0', 5555)
   stream.start()
   while True:
     if stream.streaming:
@@ -45,4 +45,4 @@ def video_feed():
 
 if __name__ == '__main__':
   # app.run(host='192.168.8.110', threaded=True)
-    app.run(host='127.0.0.1', threaded=True)
+    app.run(host='0.0.0.0',port=4000, threaded=True)

@@ -9,7 +9,7 @@ import base64
 cap = cv2.VideoCapture(0)
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(('127.0.0.1', 8080))
+client_socket.connect(('192.168.18.34', 5555))
 
 while cap.isOpened():
     _, frame = cap.read()
@@ -17,8 +17,9 @@ while cap.isOpened():
     np.save(memfile, frame)
     memfile.seek(0)
     data = memfile.read()
+    print(len(data))
 
-    client_socket.sendall(struct.pack("L", len(data)) + data)
+    client_socket.sendall(struct.pack(">L", len(data)) + data)
     
     # ret, frame = cam.read()
     # result, img_encode = cv2.imencode('.jpg', frame, encode_param)
